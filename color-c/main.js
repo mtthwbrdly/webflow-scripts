@@ -360,7 +360,10 @@ document.addEventListener("DOMContentLoaded", () => {
   barba.hooks.after(() => {
     initMenu();
     const menuButton = document.querySelector(".menu_button");
-    if (menuButton) menuButton.textContent = "Menu";
+    if (menuButton) {
+      menuButton.textContent = "Menu";
+      menuButton.style.color = "";  
+}
   });
 
   initMenu();
