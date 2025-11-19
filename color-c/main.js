@@ -340,6 +340,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function escClose(e) {
       if (e.key === "Escape" && !tlMenu.reversed()) {
         tlMenu.reverse();
+        menuButton.textContent = "Menu";
+        menuButton.style.color = ""; 
       }
     }
 
