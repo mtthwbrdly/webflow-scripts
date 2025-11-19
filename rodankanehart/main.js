@@ -1,6 +1,7 @@
 // ------------------------------------
-// MOBILE HEIGHT SCRIPT
+// MOBILE HEIGHT 
 // ------------------------------------
+
 let vh = window.innerHeight * 0.01;
 document.documentElement.style.setProperty('--vh', `${vh}px`);
 window.addEventListener('resize', () => {
@@ -8,10 +9,10 @@ window.addEventListener('resize', () => {
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 });
 
+// ------------------------------------
+// DUAL SWIPER + HASH NAVIGATION 
+// ------------------------------------
 
-// ------------------------------------
-// DUAL SWIPER + HASH NAVIGATION SCRIPT
-// ------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
 
   const leftSlider = new Swiper('.swiper-left', {
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial check
   updateHashIfSpread();
 
- // ------------------------------------
+// ------------------------------------
 // LOAD SPREAD FROM HASH ON PAGE LOAD
 // ------------------------------------
 
@@ -154,8 +155,9 @@ setTimeout(goToHashSpread, 200);
 
 
 // ------------------------------------
-// CUSTOM CURSOR SCRIPT
+// Custom Cursor
 // ------------------------------------
+
 (() => {
   'use strict';
 
@@ -237,11 +239,9 @@ setTimeout(goToHashSpread, 200);
 
 })();
 
-
 // ------------------------------------
 // PAGE TURN SOUND EFFECTS
 // ------------------------------------
-  // PAGE TURN SOUND EFFECTS
 
   const pageTurnSounds = [
     'https://cdn.prod.website-files.com/69045ba9ac3f8cc32ca5cded/6908c4aa6e3e183997e3b564_page-turn-15.mp3',
@@ -276,11 +276,10 @@ setTimeout(goToHashSpread, 200);
 document.addEventListener('slideForward', playRandomSound);
   document.addEventListener('slideBackward', playRandomSound);
 
+// ------------------------------------
+// PLAY AUDIO ON HOVER 
+// ------------------------------------
 
-// ------------------------------------
-// PLAY AUDIO ON HOVER SCRIPT
-// ------------------------------------
-  // --- PLAY AUDIO ON HOVER SCRIPT ---
   document.querySelectorAll('[play-audio]').forEach(el => {
     let audio = null;
     el.addEventListener('mouseenter', () => {
@@ -302,8 +301,9 @@ document.addEventListener('slideForward', playRandomSound);
 
 
 // ------------------------------------
-// GLOBAL MUTE / SOUND-TOGGLE SCRIPT
+// GLOBAL MUTE / SOUND-TOGGLE 
 // ------------------------------------
+
 window.SITE_MUTED = false;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -395,10 +395,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// ------------------------------------
+// Top and Bottom Swipers
+// ------------------------------------
 
-// ------------------------------------
-// INDEPENDENT TOP & BOTTOM SWIPERS
-// ------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
 
   const topEl = document.querySelector(".top-swiper");
@@ -406,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!topEl || !bottomEl) return;
 
-  // TOP SWIPER (independent)
+  // Top Swiper
   new Swiper(topEl, {
  		direction: "horizontal",
     speed: 500,
@@ -426,7 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
     observeParents: true,
   });
 
-  // BOTTOM SWIPER (independent)
+  // Bottom Swiper
   new Swiper(bottomEl, {
  		 direction: "horizontal",
      rtl: true,
@@ -447,4 +447,642 @@ document.addEventListener("DOMContentLoaded", () => {
     observeParents: true,
   });
 
+});
+
+// ------------------------------------
+// Overlay Fly Animation 
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Note: higher value will give a slower motion
+  const FLY_SPEED_MULTIPLIER = 1;
+
+  const flyers = document.querySelectorAll('[animation="fly"]');
+
+  flyers.forEach(flyer => {
+    const parent = flyer.closest('.swiper-slide');
+    if (!parent) return;
+
+    const w = parent.offsetWidth;
+    const h = parent.offsetHeight;
+
+    function random(min, max) {
+      const delta = max - min;
+      return (direction = 1) => (min + delta * Math.random()) * direction;
+    }
+
+    const randomX = random(-w * 0.5, w * 0.5);
+    const randomY = random(-h * 0.3, h * 0.3);
+    const randomAngle = random(-45, 45);
+    const randomTime = random(6, 12);
+    const randomTime2 = random(5, 8);
+
+    const sides = ["top", "bottom", "left", "right"];
+    const side = sides[Math.floor(Math.random() * sides.length)];
+    let startX, startY;
+    switch (side) {
+      case "top": startX = Math.random() * w; startY = -200; break;
+      case "bottom": startX = Math.random() * w; startY = h + 200; break;
+      case "left": startX = -200; startY = Math.random() * h; break;
+      case "right": startX = w + 200; startY = Math.random() * h; break;
+    }
+
+    gsap.set(flyer, { x: startX, y: startY, rotation: randomAngle() });
+
+    function moveX(target, direction) {
+      gsap.to(target, {
+        duration: randomTime() * FLY_SPEED_MULTIPLIER,
+        x: randomX(direction),
+        ease: "sine.inOut",
+        onComplete: moveX,
+        onCompleteParams: [target, direction * -1]
+      });
+    }
+
+    function moveY(target, direction) {
+      gsap.to(target, {
+        duration: randomTime() * FLY_SPEED_MULTIPLIER,
+        y: randomY(direction),
+        ease: "sine.inOut",
+        onComplete: moveY,
+        onCompleteParams: [target, direction * -1]
+      });
+    }
+
+    function rotate(target, direction) {
+      gsap.to(target, {
+        duration: randomTime2() * FLY_SPEED_MULTIPLIER,
+        rotation: randomAngle(direction),
+        ease: "sine.inOut",
+        onComplete: rotate,
+        onCompleteParams: [target, direction * -1]
+      });
+    }
+
+    moveX(flyer, 1);
+    moveY(flyer, -1);
+    rotate(flyer, 1);
+  });
+});
+
+// ------------------------------------
+// Overlay Drag Animation
+// ------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+  const draggableElements = document.querySelectorAll('[animation="drag"]');
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+  draggableElements.forEach((el) => {
+    el.setAttribute('cursor-text', 'drag');
+
+    let isDragging = false;
+    let hasDragged = false;
+    let startX, startY;
+    let currentX = 0, currentY = 0;
+    let currentRotation = 0;
+
+    // Base styles
+    Object.assign(el.style, {
+      position: 'absolute',
+      cursor: 'grab',
+      touchAction: isMobile ? 'none' : 'auto',
+      transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
+      transition: 'transform 0.5s ease',
+      willChange: 'transform',
+      WebkitUserSelect: 'none',
+      userSelect: 'none'
+    });
+
+    const randomRotation = () => {
+      const angle = 5 + Math.random() * 5;
+      const direction = Math.random() < 0.5 ? -1 : 1;
+      return angle * direction;
+    };
+
+    const startDrag = (x, y) => {
+      isDragging = true;
+      hasDragged = false;
+      el.style.cursor = 'grabbing';
+      el.style.transition = 'none';
+      el.style.pointerEvents = 'none';
+      currentRotation = randomRotation();
+
+      el.style.transform =
+        `translate3d(${currentX}px, ${currentY}px, 0) scale(1.05) rotate(${currentRotation}deg)`;
+
+      startX = x - currentX;
+      startY = y - currentY;
+    };
+
+    const moveDrag = (x, y) => {
+      if (!isDragging) return;
+
+      const dx = x - (startX + currentX);
+      const dy = y - (startY + currentY);
+
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasDragged = true;
+
+      currentX = x - startX;
+      currentY = y - startY;
+
+      el.style.transform =
+        `translate3d(${currentX}px, ${currentY}px, 0) scale(1.05) rotate(${currentRotation}deg)`;
+    };
+
+    const endDrag = () => {
+      if (!isDragging) return;
+
+      isDragging = false;
+      el.style.cursor = 'grab';
+      el.style.transition = 'transform 0.5s ease';
+      el.style.pointerEvents = 'auto';
+
+      el.style.transform =
+        `translate3d(${currentX}px, ${currentY}px, 0) scale(1) rotate(0deg)`;
+
+      // Prevent click after drag
+      if (hasDragged) {
+        const blockClick = (e) => {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          document.removeEventListener('click', blockClick, true);
+        };
+        document.addEventListener('click', blockClick, true);
+      }
+    };
+
+    const getClientPos = (e) =>
+      e.touches && e.touches.length > 0
+        ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
+        : { x: e.clientX, y: e.clientY };
+
+    // Desktop
+    if (!isMobile) {
+      el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        startDrag(e.clientX, e.clientY);
+      });
+
+      document.addEventListener('mousemove', (e) =>
+        moveDrag(e.clientX, e.clientY)
+      );
+
+      document.addEventListener('mouseup', endDrag);
+    }
+
+    // Mobile
+    if (isMobile) {
+      el.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const { x, y } = getClientPos(e);
+        startDrag(x, y);
+      }, { passive: false });
+
+      document.addEventListener('touchmove', (e) => {
+        const { x, y } = getClientPos(e);
+        moveDrag(x, y);
+      }, { passive: false });
+
+      document.addEventListener('touchend', endDrag);
+      document.addEventListener('touchcancel', endDrag);
+    }
+
+    // Click suppression
+    el.addEventListener('click', (e) => {
+      if (hasDragged) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      } else {
+        e.stopPropagation();
+      }
+    });
+  });
+});
+
+// ------------------------------------
+// Carousel Auto Play
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const carousels = document.querySelectorAll('[carousel="autoplay"]');
+
+  carousels.forEach(carousel => {
+    const images = carousel.querySelectorAll('.carousel-image');
+    if (!images.length) return;
+
+    let i = 0;
+    images[i].classList.add('active');
+
+    setInterval(() => {
+      images[i].classList.remove('active');
+      i = (i + 1) % images.length;
+      images[i].classList.add('active');
+    }, 2000);
+  });
+});
+
+// ------------------------------------
+// Overlay Position
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const randomOverlays = document.querySelectorAll('[overlay-position="random"]');
+  
+  randomOverlays.forEach(el => {
+    const parent = el.offsetParent || document.body;
+    const parentRect = parent.getBoundingClientRect();
+
+    const elRect = el.getBoundingClientRect();
+
+    const maxLeft = parentRect.width - elRect.width;
+    const maxTop = parentRect.height - elRect.height;
+
+    const left = Math.random() * maxLeft;
+    const top = Math.random() * maxTop;
+
+    el.style.position = "absolute";
+    el.style.left = `${left}px`;
+    el.style.top = `${top}px`;
+    el.style.transform = "none";
+  });
+});
+
+// ------------------------------------
+// Ovelerlay Rotation
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rotatingItems = document.querySelectorAll("[overlay-rotation]");
+  rotatingItems.forEach(el => {
+    const deg = parseFloat(el.getAttribute("overlay-rotation"));
+    if (!isNaN(deg)) {
+      el.style.transform = `rotate(${deg}deg)`;
+      el.style.transformOrigin = "center";
+    }
+  });
+});
+
+// ------------------------------------
+// Contact Time
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const dateEl = document.querySelector(".date-text");
+  const timeEl = document.querySelector(".time-text");
+
+  function updateTime() {
+    const now = new Date();
+
+    // Format date: Wednesday, 12 November
+    const dateString = now.toLocaleDateString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long"
+    });
+
+    // Format time: 00:00 (24h)
+    const timeString = now.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+
+    dateEl.textContent = dateString;
+    timeEl.textContent = timeString;
+  }
+
+  // Run immediately
+  updateTime();
+
+  // Update every second
+  setInterval(updateTime, 1000);
+});
+
+// ------------------------------------
+// Contact Modal Fade In
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const contactButton = document.getElementById("contact-button");
+  const contactModal = document.getElementById("contact-modal");
+  const contactClose = document.getElementById("close-button");
+
+  // NEW: elements inside modal
+  const contactWrapper = document.querySelector(".contact-container");
+  const phoneWrapper = document.querySelector(".phone-wrapper");
+
+  // Ensure starting state
+  gsap.set(contactModal, { opacity: 0, pointerEvents: "none" });
+  gsap.set(contactWrapper, { opacity: 0 });
+  gsap.set(phoneWrapper, { opacity: 0, y: 10 });
+
+  // Modal timeline
+  const tl = gsap.timeline({ paused: true });
+
+  tl.to(contactModal, {
+    opacity: 1,
+    duration: 0.1,
+    pointerEvents: "auto",
+    ease: "none",
+  })
+
+  // FIRST: fade in contact-wrapper
+  .to(contactWrapper, {
+    opacity: 1,
+    y: 0,
+    duration: 0.4,
+    ease: "power2.out",
+  })
+
+  // SECOND: fade in phone-wrapper
+  .to(phoneWrapper, {
+    opacity: 1,
+    y: 0,
+    duration: 0.4,
+    ease: "power2.out",
+  })
+
+  // onComplete after everything is visible
+  .add(() => {
+    document.dispatchEvent(new CustomEvent("contactModalOpened"));
+  });
+
+  // Open modal
+  contactButton.addEventListener("click", () => {
+    tl.play();
+  });
+
+  // Close modal (button)
+  if (contactClose) {
+    contactClose.addEventListener("click", () => {
+      tl.reverse();
+    });
+  }
+
+  // Close modal on Escape key
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && tl.progress() > 0 && !tl.reversed()) {
+      tl.reverse();
+    }
+  });
+});
+
+// ------------------------------------
+// Contact Modal Notifications
+// ------------------------------------
+
+document.addEventListener("contactModalOpened", handleContactModal);
+
+function handleContactModal() {
+  document.removeEventListener("contactModalOpened", handleContactModal);
+
+  const notificationsWrapper = document.querySelector(".notifications-list");
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+// 		Notes:
+// 		mobile: true     				(Show on mobile only)  
+//		mobile: false						(Show on desktop only)  
+//		mobile: null 						(Show everywhere)  
+
+  const notifications = [
+    {
+      icon: "https://cdn.prod.website-files.com/69045ba9ac3f8cc32ca5cded/69146bf74c1a7de6b9f73c8a_rkh-profile.jpg",
+      sender: "Rodan Kane Hart",
+      description: "Full website coming soon ⏳",
+      link: null,
+      animated: false,
+      customClass: null,
+      mobile: null
+    },
+    {
+      icon: "https://cdn.prod.website-files.com/69045ba9ac3f8cc32ca5cded/69146bf74c1a7de6b9f73c8a_rkh-profile.jpg",
+      sender: "Rodan Kane Hart",
+      description: "Click here to see process 📝",
+      link: null,
+      animated: true,
+      customClass: "sketches-button",
+      mobile: true
+    },
+    {
+      icon: "https://cdn.prod.website-files.com/69045ba9ac3f8cc32ca5cded/69146bf72c48dd508cbf7077_thefourth-logo.jpg",
+      sender: "THE FOURTH",
+      description: "or checkout THEFOURTH 🔗",
+      link: "https://www.instagram.com/___thefourth___/",
+      animated: false,
+      customClass: null,
+      mobile: null
+    },
+    {
+      icon: "https://cdn.prod.website-files.com/69045ba9ac3f8cc32ca5cded/69146bf7c75ae6d2b521a584_spaceby-logo.jpg",
+      sender: "SPACE BY__",
+      description: "and SPACE BY__ 🔗",
+      link: "https://www.instagram.com/spaceby___/",
+      animated: false,
+      customClass: null,
+      mobile: null
+    },
+    {
+      icon: "https://cdn.prod.website-files.com/69045ba9ac3f8cc32ca5cded/69146bf74c1a7de6b9f73c8a_rkh-profile.jpg",
+      sender: "Rodan Kane Hart",
+      description: "Tick tock Matthew Bradley... ⏰",
+      link: "https://www.matthewbradley.info",
+      animated: false,
+      customClass: null,
+      mobile: null
+    }
+  ];
+
+  const notificationSound = new Audio(
+    "https://cdn.prod.website-files.com/69045ba9ac3f8cc32ca5cded/691494a54949de5ef1480bd5_message-tone.mp3"
+  );
+  notificationSound.volume = 0.8;
+  notificationSound.muted = window.SITE_MUTED || false;
+
+  const normalizeUrl = (url) => {
+    if (!url) return null;
+    if (/^https?:\/\//i.test(url)) return url;
+    return `https://${url.replace(/^\/\//, "")}`;
+  };
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  function createNotification({ icon, sender, description, link, animated, customClass }) {
+
+    const wrapper = link ? document.createElement("a") : document.createElement("div");
+    wrapper.classList.add("notification-item");
+
+    if (customClass) wrapper.classList.add(customClass);
+
+    if (animated) wrapper.classList.add("animated", "gradient-border");
+    
+    if (link) {
+      wrapper.href = normalizeUrl(link);
+      wrapper.target = "_blank";
+      wrapper.rel = "noopener noreferrer";
+    }
+
+    const iconDiv = document.createElement("div");
+    iconDiv.classList.add("notification-icon");
+
+    const img = document.createElement("img");
+    img.classList.add("notification-image");
+    img.src = icon;
+    img.alt = `${sender} icon`;
+    iconDiv.appendChild(img);
+
+    const contentDiv = document.createElement("div");
+    contentDiv.classList.add("notification-content");
+
+    const rowDiv = document.createElement("div");
+    rowDiv.classList.add("notification-row");
+
+    const senderText = document.createElement("div");
+    senderText.classList.add("notification-text", "is-title");
+    senderText.textContent = sender;
+
+    const timeText = document.createElement("div");
+    timeText.classList.add("notification-text", "is-time");
+    timeText.textContent = getCurrentTime();
+
+    rowDiv.appendChild(senderText);
+    rowDiv.appendChild(timeText);
+
+    const descriptionText = document.createElement("div");
+    descriptionText.classList.add("notification-text", "is-description");
+    descriptionText.textContent = description;
+
+    contentDiv.appendChild(rowDiv);
+    contentDiv.appendChild(descriptionText);
+
+    wrapper.appendChild(iconDiv);
+    wrapper.appendChild(contentDiv);
+
+    return wrapper;
+  }
+
+  function animateIn(el) {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(20px)";
+    el.style.willChange = "opacity, transform";
+    el.style.transition = "all 0.4s ease";
+
+    el.getBoundingClientRect();
+
+    requestAnimationFrame(() => {
+      el.style.opacity = "1";
+      el.style.transform = "translateY(0)";
+    });
+
+    el.addEventListener("transitionend", () => {
+      el.style.willChange = "";
+    }, { once: true });
+  }
+
+  const staggerPattern = [1000, 2000, 1000, 1000, 3000];
+
+  function showNotificationsStaggered(list) {
+    let totalDelay = 1000;
+
+    list.forEach((notif, i) => {
+      // --- MOBILE FILTERING LOGIC ---
+      if (notif.mobile === true && !isMobile) return;   // mobile only
+      if (notif.mobile === false && isMobile) return;   // desktop only
+      // null/undefined → show everywhere
+
+      const delay = staggerPattern[i] || (800 + Math.random() * 700);
+      totalDelay += delay;
+
+      setTimeout(() => {
+        const el = createNotification(notif);
+        notificationsWrapper.appendChild(el);
+
+        notificationSound.muted = window.SITE_MUTED || false;
+        notificationSound.currentTime = 0;
+        notificationSound.play().catch(() => {});
+
+        animateIn(el);
+      }, totalDelay);
+    });
+  }
+
+  showNotificationsStaggered(notifications);
+}
+// ------------------------------------
+// Custom Buttons 
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const contactButton  = document.querySelector(".contact-button-container");
+  const contactModal   = document.querySelector(".contact-modal");
+
+  if (!contactButton || !contactModal) return;
+
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest(".sketches-button");
+    if (!target) return;
+
+    gsap.to([contactButton, contactModal], {
+      y: "-150%",
+      opacity: 0,
+      duration: 0.6,
+      ease: "power3.inOut",
+      onComplete: () => {
+        contactButton.style.pointerEvents = "none";
+        contactModal.style.pointerEvents = "none";
+      }
+    });
+  });
+});
+
+// ------------------------------------
+// Charger Animation
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const battery = document.querySelector(".is-battery");
+  const charger = document.querySelector(".charger-wrapper");
+  const redIcon = document.querySelector(".svg-icon.red");
+  const phone = document.querySelector(".iphone-image");
+
+  if (!battery || !charger || !redIcon || !phone) return;
+
+  gsap.set(charger, { y: "200%" });
+
+  const originalWidth = redIcon.getAttribute("width") || "30%";
+
+  battery.setAttribute("cursor-text", "please charge");
+
+  let isOpen = false;
+
+  battery.addEventListener("click", () => {
+    isOpen = !isOpen;
+
+    gsap.to(charger, {
+      y: isOpen ? "92%" : "200%",
+      duration: 0.6,
+      ease: "power3.out"
+    });
+
+    gsap.to(redIcon, {
+      fill: isOpen ? "#23C552" : "#f84f31",
+      attr: { width: isOpen ? "70%" : originalWidth },
+      duration: 10,
+      ease: "power3.out"
+    });
+
+    gsap.to(phone, {
+      filter: isOpen ? "brightness(1.25)" : "brightness(1)",
+      duration: 10,
+      ease: "power3.out",
+      delay: 0.15
+    });
+
+    battery.setAttribute("cursor-text", isOpen ? "charging" : "please charge");
+  });
 });
