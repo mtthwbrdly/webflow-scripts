@@ -1,5 +1,7 @@
-// --- SCRIPT START ---
-//   Global Script Registry
+// ------------------------------------
+//  Global Script Registry
+// ------------------------------------
+
 window.pageScripts = window.pageScripts || [];
 
 window.registerPageScript = function (fn) {
@@ -17,11 +19,11 @@ function runPageScripts(container) {
     }
   });
 }
-// --- SCRIPT END ---
 
+// ------------------------------------
+//   Lenis Smooth Scroll
+// ------------------------------------
 
-// --- SCRIPT START ---
-//   Lenis Initialization Function
 window.initLenis = function () {
   if (window.lenis && window.lenis.destroy) {
     window.lenis.destroy();
@@ -52,11 +54,11 @@ window.initLenis = function () {
     });
   }
 };
-// --- SCRIPT END ---
 
-
-// --- SCRIPT START ---
+// ------------------------------------
 //   Webflow IX2 Reinitialization
+// ------------------------------------
+
 window.registerPageScript(function () {
   if (window.Webflow && window.Webflow.require) {
     window.Webflow.destroy();
@@ -66,21 +68,21 @@ window.registerPageScript(function () {
     if (ix2 && ix2.init) ix2.init();
   }
 });
-// --- SCRIPT END ---
 
-
-// --- SCRIPT START ---
+// ------------------------------------
 //   Lenis Auto-Init
+// ------------------------------------
+
 window.registerPageScript(function () {
   if (window.Lenis) {
     window.initLenis();
   }
 });
-// --- SCRIPT END ---
 
-
-// --- SCRIPT START ---
+// ------------------------------------
 //   Parallax Header Image
+// ------------------------------------
+
 window.registerPageScript(function (container) {
   if (!window.gsap || !window.ScrollTrigger || !window.lenis) return;
 
@@ -132,11 +134,11 @@ window.registerPageScript(function (container) {
 
   gsap.delayedCall(0.1, () => ScrollTrigger.refresh());
 });
-// --- SCRIPT END ---
 
-
-// --- SCRIPT START ---
+// ------------------------------------
 //   Next Project CMS Script
+// ------------------------------------
+
 window.registerPageScript(function () {
   if (!window.jQuery) return;
 
@@ -186,11 +188,11 @@ window.registerPageScript(function () {
     }
   });
 });
-// --- SCRIPT END ---
 
-
-// --- SCRIPT START ---
+// ------------------------------------
 //   Barba Page Transitions
+// ------------------------------------
+
 document.addEventListener("DOMContentLoaded", function () {
   if (window.barba && window.barba.use && window.barbaPrefetch) {
     barba.use(barbaPrefetch);
@@ -248,10 +250,11 @@ document.addEventListener("DOMContentLoaded", function () {
     ]
   });
 });
-// --- SCRIPT END ---
 
-// --- SCRIPT START ---
+// ------------------------------------
 //   Menu Open/Close Animation
+// ------------------------------------
+
 document.addEventListener("DOMContentLoaded", () => {
 
   function initMenu() {
@@ -309,10 +312,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power3.inOut"
       })     
       .to(menuButton, {
-      color:"var(--mid-grey)",
-      duration: 0.5,
-      ease: "power3.inOut"
-      }, "<")
+        color:"var(--mid-grey)",
+        duration: 0.5,
+        ease: "power3.inOut"
+        }, "<")
       .to(menuLinks, {
         opacity: 1,
         y: 0,
@@ -344,25 +347,29 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", escClose);
 
     menuLinks.forEach(link => {
-      link.addEventListener("click", () => {
+      link.removeEventListener("click", link.__menuHandler);
+      link.__menuHandler = () => {
         if (!tlMenu.reversed()) tlMenu.reverse();
-      });
+        menuButton.textContent = "Menu";
+      };
+      link.addEventListener("click", link.__menuHandler);
     });
   }
 
   barba.hooks.after(() => {
     initMenu();
+    const menuButton = document.querySelector(".menu_button");
+    if (menuButton) menuButton.textContent = "Menu";
   });
 
   initMenu();
 
 });
-// --- SCRIPT END ---
 
-
-
-// --- SCRIPT START ---
+// ------------------------------------
 //   Hero Text & Logo Animation
+// ------------------------------------
+
 window.registerPageScript(function (container) {
 
   const scope = container || document;  
@@ -417,4 +424,3 @@ tl
   }, "scale");
   
 });
-// --- SCRIPT END ---
