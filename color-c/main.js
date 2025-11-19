@@ -264,6 +264,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuLinks     = document.querySelectorAll(".menu-link");
     const menuContainer = document.querySelector(".menu_container");
 
+    function setMenuOpen() {
+      menuButton.textContent = "Close";
+      menuButton.style.color = "var(--mid-grey)";
+    }
+
+    function setMenuClosed() {
+      menuButton.textContent = "Menu";
+      menuButton.style.color = "";
+    }
+
     if (!menuWrapper || !menuButton) return;
 
     gsap.set(menuWrapper, { 
@@ -331,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function toggleMenu() {
       const isOpening = tlMenu.reversed(); 
       tlMenu.reversed() ? tlMenu.play() : tlMenu.reverse();
-      menuButton.textContent = isOpening ? "Close" : "Menu";
+      isOpening ? setMenuOpen() : setMenuClosed();
     }
     
     menuButton.removeEventListener("click", toggleMenu);
@@ -340,8 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function escClose(e) {
       if (e.key === "Escape" && !tlMenu.reversed()) {
         tlMenu.reverse();
-        menuButton.textContent = "Menu";
-        menuButton.style.color = ""; 
+        setMenuClosed();
       }
     }
 
@@ -352,8 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
       link.removeEventListener("click", link.__menuHandler);
       link.__menuHandler = () => {
         if (!tlMenu.reversed()) tlMenu.reverse();
-        menuButton.textContent = "Menu";
-        menuButton.style.color = ""; 
+        setMenuClosed();
       };
       link.addEventListener("click", link.__menuHandler);
     });
@@ -362,15 +370,13 @@ document.addEventListener("DOMContentLoaded", () => {
   barba.hooks.after(() => {
     initMenu();
     const menuButton = document.querySelector(".menu_button");
-    if (menuButton) {
-      menuButton.textContent = "Menu";
-      menuButton.style.color = "";  
-}
+    if (menuButton) setMenuClosed();
   });
 
   initMenu();
 
 });
+
 
 // ------------------------------------
 //   Hero Text & Logo Animation
