@@ -351,6 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
       link.__menuHandler = () => {
         if (!tlMenu.reversed()) tlMenu.reverse();
         menuButton.textContent = "Menu";
+        menuButton.style.color = ""; 
       };
       link.addEventListener("click", link.__menuHandler);
     });
