@@ -1041,7 +1041,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ------------------------------------
-// Charger Animation
+// Charger Animation Update
 // ------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1054,7 +1054,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   gsap.set(charger, { y: "200%" });
 
-  const originalWidth = redIcon.getAttribute("width") || "30%";
+  const originalWidth = redIcon.getAttribute("width") || "10%";
 
   battery.setAttribute("cursor-text", "please charge");
 
@@ -1069,7 +1069,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ease: "power3.out"
     });
 
-    gsap.to(redIcon, {
+    gsap.to(redIcon, { 
       fill: isOpen ? "#23C552" : "#f84f31",
       attr: { width: isOpen ? "70%" : originalWidth },
       duration: 10,

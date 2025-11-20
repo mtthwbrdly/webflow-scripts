@@ -377,7 +377,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-
 // ------------------------------------
 //   Hero Text & Logo Animation
 // ------------------------------------
@@ -435,4 +434,41 @@ tl
     ease: "power3.inOut"
   }, "scale");
   
+});
+
+
+// ------------------------------------
+//   Menu Button Colour Detection
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const menuButton = document.querySelector(".menu_button");
+  if (!menuButton) return;
+
+  function checkOverlapWithImage() {
+    const btnRect = menuButton.getBoundingClientRect();
+    const images = document.querySelectorAll("img, .header_cover-image");
+
+    let isOnImage = false;
+
+    images.forEach(img => {
+      const imgRect = img.getBoundingClientRect();
+
+      const overlap =
+        btnRect.left < imgRect.right &&
+        btnRect.right > imgRect.left &&
+        btnRect.top < imgRect.bottom &&
+        btnRect.bottom > imgRect.top;
+
+      if (overlap) isOnImage = true;
+    });
+
+    menuButton.style.color = isOnImage ? "white" : "var(--light-grey)";
+  }
+
+  checkOverlapWithImage();
+  window.addEventListener("scroll", checkOverlapWithImage);
+  window.addEventListener("resize", checkOverlapWithImage);
+
 });
