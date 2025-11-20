@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ------------------------------------
-// Top and Bottom Swipers
+// Mobile Top and Bottom Swipers
 // ------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -413,15 +413,13 @@ document.addEventListener("DOMContentLoaded", () => {
     loop: true,
     centeredSlides: true,
     allowTouchMove: true,
-
+    freeMode: true,
     slidesPerView: 1,
     spaceBetween: 0,
-
     autoplay: {
       delay: 5000,
       disableOnInteraction: false,
     },
-
     observer: true,
     observeParents: true,
   });
@@ -434,15 +432,13 @@ document.addEventListener("DOMContentLoaded", () => {
     loop: true,
     centeredSlides: true,
     allowTouchMove: true,
-
+    freeMode: true,
     slidesPerView: 1,
     spaceBetween: 0,
-
     autoplay: {
       delay: 2500,
       disableOnInteraction: false,
     },
-
     observer: true,
     observeParents: true,
   });
