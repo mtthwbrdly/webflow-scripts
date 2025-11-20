@@ -472,3 +472,39 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", checkOverlapWithImage);
 
 });
+
+// ------------------------------------
+//   Client Thumbnails Reveal
+// ------------------------------------
+
+window.registerPageScript(function () {
+  const clientItems = document.querySelectorAll(".clients_item");
+  const displayThumbnail = document.querySelector(".clients_thumbnail");
+
+  if (!clientItems.length || !displayThumbnail) return;
+
+  // Remove any previously attached listeners to avoid duplication
+  clientItems.forEach((item) => {
+    const newItem = item.cloneNode(true);
+    item.parentNode.replaceChild(newItem, item);
+  });
+
+  // Re-select after clone
+  const freshClientItems = document.querySelectorAll(".clients_item");
+
+  freshClientItems.forEach((item) => {
+    const refImg = item.querySelector(".clients-thumbnail-reference");
+    if (!refImg) return;
+
+    const imageUrl = refImg.src;
+
+    item.addEventListener("mouseenter", () => {
+      displayThumbnail.src = imageUrl;
+      displayThumbnail.style.opacity = "1";
+    });
+
+    item.addEventListener("mouseleave", () => {
+      displayThumbnail.style.opacity = "0";
+    });
+  });
+});

@@ -987,7 +987,7 @@ function handleContactModal() {
   const staggerPattern = [1000, 2000, 1000, 1000, 3000];
 
   function showNotificationsStaggered(list) {
-    let totalDelay = 1000;
+    let totalDelay = 500;
 
     list.forEach((notif, i) => {
       // --- MOBILE FILTERING LOGIC ---
@@ -1085,4 +1085,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     battery.setAttribute("cursor-text", isOpen ? "charging" : "please charge");
   });
+});
+
+// ------------------------------------
+// Size Warning
+// ------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sizeWarning = document.getElementById("sizeWarning");
+
+  function checkSize() {
+    const isDesktop = window.innerWidth >= 767;
+    const tooShort = window.innerHeight < 650; // adjust this height
+
+    if (isDesktop && tooShort) {
+      sizeWarning.classList.add("show");
+    } else {
+      sizeWarning.classList.remove("show");
+    }
+  }
+
+  checkSize();
+  window.addEventListener("resize", checkSize);
 });
