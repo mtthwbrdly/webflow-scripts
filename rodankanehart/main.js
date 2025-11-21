@@ -416,10 +416,10 @@ document.addEventListener("DOMContentLoaded", () => {
     freeMode: true,
     slidesPerView: 1,
     spaceBetween: 0,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false,
-    },
+    // autoplay: {
+    //   delay: 5000,
+    //   disableOnInteraction: false,
+    // },
     observer: true,
     observeParents: true,
   });
@@ -435,10 +435,10 @@ document.addEventListener("DOMContentLoaded", () => {
     freeMode: true,
     slidesPerView: 1,
     spaceBetween: 0,
-    autoplay: {
-      delay: 2500,
-      disableOnInteraction: false,
-    },
+    // autoplay: {
+    //   delay: 2500,
+    //   disableOnInteraction: false,
+    // },
     observer: true,
     observeParents: true,
   });
