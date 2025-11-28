@@ -1,3 +1,4 @@
+
 // ------------------------------------
 // MOBILE HEIGHT 
 // ------------------------------------
@@ -266,6 +267,7 @@ setTimeout(goToHashSpread, 200);
 
 
   function playRandomSound() {
+    if (window.SITE_MUTED) return;
     const sound = new Audio(getRandomSound());
     sound.volume = 0.35; // adjust volume 
     sound.play().catch(() => {
@@ -1009,6 +1011,7 @@ function handleContactModal() {
 
   showNotificationsStaggered(notifications);
 }
+
 // ------------------------------------
 // Custom Buttons 
 // ------------------------------------
