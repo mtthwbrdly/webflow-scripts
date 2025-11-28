@@ -415,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loop: true,
     centeredSlides: true,
     allowTouchMove: true,
-    freeMode: true,
+    freeMode: false,
     slidesPerView: 1,
     spaceBetween: 0,
     autoplay: {
@@ -434,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loop: true,
     centeredSlides: true,
     allowTouchMove: true,
-    freeMode: true,
+    freeMode: false,
     slidesPerView: 1,
     spaceBetween: 0,
     autoplay: {
