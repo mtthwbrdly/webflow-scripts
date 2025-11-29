@@ -1035,7 +1035,7 @@ function handleContactModal() {
   const staggerPattern = [1000, 2000, 1000, 1000, 3000];
 
   function showNotificationsStaggered(list) {
-    let totalDelay = 500;
+    let totalDelay = 200;
 
     list.forEach((notif, i) => {
       // --- MOBILE FILTERING LOGIC ---
