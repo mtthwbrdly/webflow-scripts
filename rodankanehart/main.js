@@ -812,19 +812,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const contactButton = document.getElementById("contact-button");
+  const mobileContactButtons = document.querySelectorAll(".mobile-contact-button");
   const contactModal = document.getElementById("contact-modal");
   const contactClose = document.getElementById("close-button");
 
-  // NEW: elements inside modal
   const contactWrapper = document.querySelector(".contact-container");
   const phoneWrapper = document.querySelector(".phone-wrapper");
 
-  // Ensure starting state
   gsap.set(contactModal, { opacity: 0, pointerEvents: "none" });
   gsap.set(contactWrapper, { opacity: 0 });
   gsap.set(phoneWrapper, { opacity: 0, y: 10 });
 
-  // Modal timeline
   const tl = gsap.timeline({ paused: true });
 
   tl.to(contactModal, {
@@ -855,9 +853,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.dispatchEvent(new CustomEvent("contactModalOpened"));
   });
 
-  // Open modal
-  contactButton.addEventListener("click", () => {
-    tl.play();
+  // Open modal on main contact button
+  if (contactButton) {
+    contactButton.addEventListener("click", () => tl.play());
+  }
+
+  // Open modal on any mobile contact buttons
+  mobileContactButtons.forEach((btn) => {
+    btn.addEventListener("click", () => tl.play());
   });
 
   // Close modal (button)
