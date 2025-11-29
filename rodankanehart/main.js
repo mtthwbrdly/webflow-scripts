@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const active = swiper.slides[swiper.activeIndex];
     if (!active) return null;
 
-    const label = active.getAttribute("aria-label"); // e.g. "7 / 50"
+    const label = active.getAttribute("aria-label"); 
     if (!label) return null;
 
     const match = label.match(/^(\d+)\s*\//);
@@ -64,41 +64,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Run check on slide change
   leftSlider.on('slideChange', updateHashIfSpread);
   rightSlider.on('slideChange', updateHashIfSpread);
 
-  // Initial check
   updateHashIfSpread();
 
-// ------------------------------------
-// LOAD SPREAD FROM HASH ON PAGE LOAD
-// ------------------------------------
+  // ------------------------------------
+  // LOAD SPREAD FROM HASH ON PAGE LOAD
+  // ------------------------------------
 
-function goToHashSpread() {
-  const hash = window.location.hash.replace("#", "");
-  const num = parseInt(hash, 10);
-  if (!num) return;
+  function goToHashSpread() {
+    const hash = window.location.hash.replace("#", "");
+    const num = parseInt(hash, 10);
+    if (!num) return;
 
-  const targetIndex = num - 1;
+    const targetIndex = num - 1;
 
-  // Ensure Swiper has completed its loop-setup before jumping
-  leftSlider.once('init', () => {
-    leftSlider.slideToLoop(targetIndex, 0, false);
-  });
-  rightSlider.once('init', () => {
-    rightSlider.slideToLoop(targetIndex, 0, false);
-  });
+    leftSlider.once('init', () => {
+      leftSlider.slideToLoop(targetIndex, 0, false);
+    });
+    rightSlider.once('init', () => {
+      rightSlider.slideToLoop(targetIndex, 0, false);
+    });
 
-  // Fallback after everything is mounted
-  setTimeout(() => {
-    leftSlider.slideToLoop(targetIndex, 0, false);
-    rightSlider.slideToLoop(targetIndex, 0, false);
-  }, 150);
-}
+    setTimeout(() => {
+      leftSlider.slideToLoop(targetIndex, 0, false);
+      rightSlider.slideToLoop(targetIndex, 0, false);
+    }, 150);
+  }
 
-// Run AFTER Swiper has built its looped DOM
-setTimeout(goToHashSpread, 200);
+  setTimeout(goToHashSpread, 200);
+
+  // ------------------------------------
+  // PATTERN LOGIC
+  // ------------------------------------
 
   const pattern = ['both', 'left', 'right', 'both', 'right', 'left'];
   let patternIndex = 0;
@@ -141,17 +140,72 @@ setTimeout(goToHashSpread, 200);
     document.dispatchEvent(new Event('slideBackward'));
   }
 
-  // Click and key controls
+  // ------------------------------------
+  // CLICK + KEY CONTROLS
+  // ------------------------------------
+
   document.getElementById('nextSlide')?.addEventListener('click', nextPatternSlide);
+
   const leftEl = document.querySelector('.swiper-left');
   const rightEl = document.querySelector('.swiper-right');
-  if (leftEl) leftEl.addEventListener('click', prevPatternSlide);
+
+  if (leftEl)  leftEl.addEventListener('click', prevPatternSlide);
   if (rightEl) rightEl.addEventListener('click', nextPatternSlide);
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') nextPatternSlide();
     else if (e.key === 'ArrowLeft') prevPatternSlide();
   });
+
+  // ------------------------------------
+  // AUTOPLAY AFTER 10s OF INACTIVITY
+  // ------------------------------------
+
+  function initAutoPlayAfterInactivity() {
+    let inactivityTimer = null;
+    let autoPlayInterval = null;
+
+    const INACTIVITY_DELAY = 10000; // 10 seconds
+    const AUTOPLAY_SPEED = 4000;    // next slide every 4 seconds
+
+    function startAutoplay() {
+      if (autoPlayInterval) return; // already running
+      autoPlayInterval = setInterval(() => {
+        nextPatternSlide(); // <— now in scope
+      }, AUTOPLAY_SPEED);
+    }
+
+    function stopAutoplay() {
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
+      }
+    }
+
+    function resetInactivityTimer() {
+      // user is active → stop autoplay, restart inactivity timer
+      stopAutoplay();
+
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+      }
+
+      inactivityTimer = setTimeout(() => {
+        startAutoplay();
+      }, INACTIVITY_DELAY);
+    }
+
+    // Any of these counts as "user is active"
+    document.addEventListener("mousemove", resetInactivityTimer);
+    document.addEventListener("mousedown", resetInactivityTimer);
+    document.addEventListener("keydown", resetInactivityTimer);
+    document.addEventListener("wheel", resetInactivityTimer, { passive: true });
+
+    // kick it off once on load
+    resetInactivityTimer();
+  }
+
+  initAutoPlayAfterInactivity();
 });
 
 
@@ -289,7 +343,7 @@ document.addEventListener('slideForward', playRandomSound);
       if (!src) return;
       audio = new Audio(src);
       audio.volume = 0.35; // volume adjustment
-      audio.muted = window.SITE_MUTED || false; // Check global mute state
+      audio.muted = window.SITE_MUTED || false; 
       audio.play().catch(() => {
       });
     });
@@ -317,10 +371,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
   
-  // Create two SVG paths - one for sound, one for muted
+  // Create two SVG paths
   const svgNS = "http://www.w3.org/2000/svg";
   
-  // GREEN speaker path (original)
+  // GREEN speaker path
   const pathSound = document.createElementNS(svgNS, "path");
   pathSound.setAttribute("id", "sound-path");
   pathSound.setAttribute("fill", "#23C552");
@@ -339,7 +393,6 @@ document.addEventListener("DOMContentLoaded", () => {
   pathMuted.style.top = "0";
   pathMuted.style.left = "0";
   
-  // Clear existing content and add both paths
   soundIcon.innerHTML = "";
   soundIcon.appendChild(pathSound);
   soundIcon.appendChild(pathMuted);
@@ -351,7 +404,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   
-  // Monitor for dynamically added audio/video elements
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
@@ -368,20 +420,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
   
-  // Start observing the document for added audio/video elements
   observer.observe(document.body, {
     childList: true,
     subtree: true
   });
   
-  // Apply initial mute state to existing elements
   applyMuteState(window.SITE_MUTED);
   
-  // Click handler
   button.addEventListener("click", () => {
     window.SITE_MUTED = !window.SITE_MUTED;
     
-    // Crossfade between the two paths
     if (window.SITE_MUTED) {
       pathSound.style.opacity = "0";
       pathMuted.style.opacity = "1";
@@ -390,7 +438,6 @@ document.addEventListener("DOMContentLoaded", () => {
       pathMuted.style.opacity = "0";
     }
     
-    // Apply mute state to all current media
     applyMuteState(window.SITE_MUTED);
     
     console.log("Mute toggled:", window.SITE_MUTED);
